@@ -5,6 +5,9 @@ build/
 dist/
 wheels/
 *.egg-info
+.auth.DS_Store
+.DS_Store
+
 
 # Virtual environments
 .venv
@@ -13,3 +16,4 @@ wheels/
 .env
 .secrets
 .auth
+

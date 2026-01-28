@@ -10,14 +10,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
-CLIENT_SECRET_FILE = os.environ["GOOGLE_CLIENT_SECRET_FILE"]
+CLIENT_SECRET_FILE = os.environ.get("GOOGLE_CLIENT_SECRET_FILE")
+if not CLIENT_SECRET_FILE:
+    raise ValueError("GOOGLE_CLIENT_SECRET_FILE environment variable is required")
 TOKEN_DIR = Path("/tmp/.auth")
 TOKEN_FILE = TOKEN_DIR / "gcal_token.json"
 
 
 def get_creds() -> Credentials:
     """Get or refresh Google Calendar API credentials."""
-    TOKEN_DIR.mkdir(exist_ok=True)
+    # Create directory with secure permissions (0o700 = rwx------)
+    TOKEN_DIR.mkdir(exist_ok=True, mode=0o700)
+    
+    # Ensure directory permissions are secure (in case it already existed)
+    TOKEN_DIR.chmod(0o700)
+    
     creds = None
 
     if TOKEN_FILE.exists():
@@ -30,6 +37,8 @@ def get_creds() -> Credentials:
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
 
+        # Write token file with secure permissions (0o600 = rw-------)
         TOKEN_FILE.write_text(creds.to_json())
+        TOKEN_FILE.chmod(0o600)
 
     return creds

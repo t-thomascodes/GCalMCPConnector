@@ -38,6 +38,8 @@ python3 main.py
 
 Note: On first run, it'll open your browser to authenticate with Google. After that, the token is saved and you won't need to do this again.
 
+Note: Remember to add mcp server to claude config file. Documentation can be found [here](https://modelcontextprotocol.io/docs/develop/connect-local-servers)
+
 ## Usage
 - Once running, Claude can:
 - List events in a date range
@@ -50,5 +52,6 @@ Note: On first run, it'll open your browser to authenticate with Google. After t
 - 'src/calendar/' - Google Calendar API client
 - 'src/mcp/' - MCP tool helpers
 - main.py - MCP server entry point
+
 
 See STRUCTURE.md for more details.
